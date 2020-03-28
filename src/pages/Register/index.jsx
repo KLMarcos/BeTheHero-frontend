@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import swal from 'sweetalert'
 import { FiArrowLeft } from 'react-icons/fi'
 
 import api from './../../services/api'
@@ -33,10 +34,25 @@ export default function Register() {
         data: { id },
       } = await api.post('ongs', data)
 
-      alert(`Seu Id de acesso ${id}`)
-      history.push('/')
+      swal({
+        title: 'Cadastrado com sucesso!',
+        text: `Sua ong foi cadastrada com o Id ${id}`,
+        icon: 'success',
+        button: 'Copiar',
+      }).then((value) => {
+        if (value) {
+          navigator.clipboard.writeText(id)
+        }
+
+        history.push('/')
+      })
     } catch (error) {
-      alert('erro no cadastro, tente novamente.')
+      swal({
+        title: 'Erro!',
+        text: 'Erro no cadastro, tente novamente.',
+        icon: 'error',
+        button: 'Ok',
+      })
     }
   }
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import swal from 'sweetalert'
 import { FiArrowLeft } from 'react-icons/fi'
 
 import api from './../../services/api'
@@ -31,9 +32,13 @@ export default function NewIncident() {
         headers: { Authorization: ongId },
       })
 
+      swal('Sucesso!', 'Caso cadastrado com sucesso!', 'success').then(() =>
+        history.push('/profile'),
+      )
+
       history.push('/profile')
     } catch (error) {
-      alert('Erro ao cadastrar, tente novamente.')
+      swal('Erro!', 'Erro ao cadastrar novo caso, tente novamente.', 'error')
     }
   }
 
