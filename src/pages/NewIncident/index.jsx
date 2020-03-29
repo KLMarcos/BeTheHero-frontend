@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import swal from 'sweetalert'
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
+import { ThemeContext } from 'styled-components'
+import swal from 'sweetalert'
 
 import api from './../../services/api'
 
-import LogoImage from './../../assets/logo.svg'
-
-import './style.css'
+import { BackLink, MainButton } from '../../components/SharedComponents'
+import { NewIncidentContainer, FormContainer } from './style'
 
 export default function NewIncident() {
-  const ongId = localStorage.getItem('ongId')
-
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [value, setValue] = useState('')
 
+  const ongId = localStorage.getItem('ongId')
+  const themeContext = useContext(ThemeContext)
   const history = useHistory()
 
   async function handleNewIncident(e) {
@@ -43,10 +43,10 @@ export default function NewIncident() {
   }
 
   return (
-    <div className="new-incident-container">
-      <div className="content">
+    <NewIncidentContainer>
+      <FormContainer>
         <section>
-          <img src={LogoImage} alt="Be The Hero" />
+          <img alt="Be The Hero" src={themeContext.images.LogoImage} />
 
           <h1>Cadastrar novo caso</h1>
           <p>
@@ -54,10 +54,10 @@ export default function NewIncident() {
             isso.
           </p>
 
-          <Link className="back-link" to="/profile">
+          <BackLink to="/profile">
             <FiArrowLeft size={16} color="#e02041" />
             Voltar para home
-          </Link>
+          </BackLink>
         </section>
         <form onSubmit={handleNewIncident}>
           <input
@@ -78,11 +78,9 @@ export default function NewIncident() {
             onChange={(e) => setValue(e.target.value)}
           />
 
-          <button className="button" type="submit">
-            Cadastrar
-          </button>
+          <MainButton type="submit">Cadastrar</MainButton>
         </form>
-      </div>
-    </div>
+      </FormContainer>
+    </NewIncidentContainer>
   )
 }

@@ -1,17 +1,19 @@
-import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import swal from 'sweetalert'
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FiLogIn } from 'react-icons/fi'
+import { ThemeContext } from 'styled-components'
+import swal from 'sweetalert'
 
 import api from './../../services/api'
 
+import { BackLink, MainButton } from '../../components/SharedComponents'
+import { LogonContainer } from './style'
 import HeroesImage from '../../assets/heroes.png'
-import LogoImage from '../../assets/logo.svg'
-import './style.css'
 
 export default function Logon() {
   const [id, setId] = useState('')
-
+  
+  const themeContext = useContext(ThemeContext)
   const history = useHistory()
 
   async function handleLogin(e) {
@@ -32,30 +34,28 @@ export default function Logon() {
   }
 
   return (
-    <div className="logon-container">
+    <LogonContainer>
       <section className="form">
-        <img src={LogoImage} alt="Be The Hero" />
+        <img alt="Be The Hero" src={themeContext.images.LogoImage} />
 
         <form onSubmit={handleLogin}>
           <h1>Faça seu logon</h1>
           <input
             type="text"
-            placeholder="Sua ID"
+            placeholder="Seu ID"
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
-          <button className="button" type="submit">
-            Entrar
-          </button>
+          <MainButton type="submit">Entrar</MainButton>
 
-          <Link className="back-link" to="/register">
+          <BackLink to="/register">
             <FiLogIn size={16} color="#e02041" />
             Não tenho cadastro
-          </Link>
+          </BackLink>
         </form>
       </section>
 
-      <img src={HeroesImage} alt="Heroes" />
-    </div>
+      <img className="heroes-img" src={HeroesImage} alt="Heroes" />
+    </LogonContainer>
   )
 }

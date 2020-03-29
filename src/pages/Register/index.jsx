@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import swal from 'sweetalert'
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
+import { ThemeContext } from 'styled-components'
+import swal from 'sweetalert'
 
 import api from './../../services/api'
 
-import LogoImage from './../../assets/logo.svg'
-
-import './style.css'
+import { BackLink, MainButton } from '../../components/SharedComponents'
+import { FormContainer, RegisterContainer } from './style'
 
 export default function Register() {
   const [name, setName] = useState('')
@@ -16,6 +16,7 @@ export default function Register() {
   const [city, setCity] = useState('')
   const [uf, setUf] = useState('')
 
+  const themeContext = useContext(ThemeContext)
   const history = useHistory()
 
   async function handleRegister(e) {
@@ -41,7 +42,9 @@ export default function Register() {
         button: 'Copiar',
       }).then((value) => {
         if (value) {
-          navigator.clipboard.writeText(id)
+          try {
+            navigator.clipboard.writeText(id)
+          } catch (error) {}
         }
 
         history.push('/')
@@ -57,10 +60,10 @@ export default function Register() {
   }
 
   return (
-    <div className="register-container">
-      <div className="content">
+    <RegisterContainer>
+      <FormContainer>
         <section>
-          <img src={LogoImage} alt="Be The Hero" />
+          <img alt="Be The Hero" src={themeContext.images.LogoImage} />
 
           <h1>Cadastro</h1>
           <p>
@@ -68,10 +71,10 @@ export default function Register() {
             casos da sua ONG.
           </p>
 
-          <Link className="back-link" to="/">
+          <BackLink to="/">
             <FiArrowLeft size={16} color="#e02041" />
             Já tenho cadastro
-          </Link>
+          </BackLink>
         </section>
         <form onSubmit={handleRegister}>
           <input
@@ -111,11 +114,9 @@ export default function Register() {
             />
           </div>
 
-          <button className="button" type="submit">
-            Cadastrar
-          </button>
+          <MainButton type="submit">Cadastrar</MainButton>
         </form>
-      </div>
-    </div>
+      </FormContainer>
+    </RegisterContainer>
   )
 }

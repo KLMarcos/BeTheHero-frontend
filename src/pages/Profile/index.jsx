@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FiPower, FiTrash2 } from 'react-icons/fi'
+import { ThemeContext } from 'styled-components'
 
 import api from './../../services/api'
 
-import LogoImage from './../../assets/logo.svg'
-
-import './style.css'
+import { IncidentItem, ProfileContainer } from './style'
+import { MainLink } from '../../components/SharedComponents'
 
 export default function Profile() {
   const [incidents, setIncidents] = useState([])
 
   const ongName = localStorage.getItem('ongName')
   const ongId = localStorage.getItem('ongId')
-
+  const themeContext = useContext(ThemeContext)
   const history = useHistory()
 
   useEffect(() => {
@@ -44,14 +44,12 @@ export default function Profile() {
   }
 
   return (
-    <div className="profile-container">
+    <ProfileContainer>
       <header>
-        <img src={LogoImage} alt="Be The Hero" />
+        <img alt="Be The Hero" src={themeContext.images.LogoImage} />
         <span>Bem vindo, {ongName}</span>
 
-        <Link className="button" to="/incidents/new">
-          Cadastrar novo caso
-        </Link>
+        <MainLink to="/incidents/new">Cadastrar novo caso</MainLink>
 
         <button type="button" onClick={handleLogout}>
           <FiPower size="18" color="#E02041" />
@@ -62,7 +60,7 @@ export default function Profile() {
 
       <ul>
         {incidents.map((incident) => (
-          <li key={incident.id}>
+          <IncidentItem key={incident.id}>
             <strong>Caso:</strong>
             <p>{incident.title}</p>
 
@@ -83,9 +81,9 @@ export default function Profile() {
             >
               <FiTrash2 size="20" color="#a8a8b3" />
             </button>
-          </li>
+          </IncidentItem>
         ))}
       </ul>
-    </div>
+    </ProfileContainer>
   )
 }
