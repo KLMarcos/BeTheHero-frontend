@@ -1,25 +1,28 @@
-import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import swal from 'sweetalert'
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
+import { ThemeContext } from 'styled-components'
+import swal from 'sweetalert'
 
 import api from './../../services/api'
 
-import LogoImage from './../../assets/logo.svg'
-
-import './style.css'
+import { BackLink, MainButton } from '../../components/SharedComponents'
+import { NewIncidentContainer, FormContainer } from './style'
+import Loading from '../../assets/infinity.svg'
 
 export default function NewIncident() {
-  const ongId = localStorage.getItem('ongId')
-
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [value, setValue] = useState('')
+  const [loading, setLoading] = useState(false)
 
+  const ongId = localStorage.getItem('ongId')
+  const themeContext = useContext(ThemeContext)
   const history = useHistory()
 
   async function handleNewIncident(e) {
     e.preventDefault()
+    setLoading(true)
 
     const data = {
       title,
@@ -36,17 +39,21 @@ export default function NewIncident() {
         history.push('/profile'),
       )
 
+      setLoading(false)
+
       history.push('/profile')
     } catch (error) {
       swal('Erro!', 'Erro ao cadastrar novo caso, tente novamente.', 'error')
+
+      setLoading(false)
     }
   }
 
   return (
-    <div className="new-incident-container">
-      <div className="content">
+    <NewIncidentContainer>
+      <FormContainer>
         <section>
-          <img src={LogoImage} alt="Be The Hero" />
+          <img alt="Be The Hero" src={themeContext.images.LogoImage} />
 
           <h1>Cadastrar novo caso</h1>
           <p>
@@ -54,35 +61,38 @@ export default function NewIncident() {
             isso.
           </p>
 
-          <Link className="back-link" to="/profile">
+          <BackLink to="/profile">
             <FiArrowLeft size={16} color="#e02041" />
             Voltar para home
-          </Link>
+          </BackLink>
         </section>
         <form onSubmit={handleNewIncident}>
           <input
+            disabled={loading}
             type="text"
             placeholder="Título do caso"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={e => setTitle(e.target.value)}
           />
           <textarea
+            disabled={loading}
             placeholder="Descrição"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={e => setDescription(e.target.value)}
           />
           <input
+            disabled={loading}
             type="text"
             placeholder="Valor em reais"
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={e => setValue(e.target.value)}
           />
 
-          <button className="button" type="submit">
-            Cadastrar
-          </button>
+          <MainButton disabled={loading} type="submit">
+            {loading ? <img src={Loading} alt="Loading" /> : 'Cadastrar'}
+          </MainButton>
         </form>
-      </div>
-    </div>
+      </FormContainer>
+    </NewIncidentContainer>
   )
 }

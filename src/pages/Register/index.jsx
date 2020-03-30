@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import swal from 'sweetalert'
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
+import { ThemeContext } from 'styled-components'
+import swal from 'sweetalert'
 
 import api from './../../services/api'
 
-import LogoImage from './../../assets/logo.svg'
-
-import './style.css'
+import { BackLink, MainButton } from '../../components/SharedComponents'
+import { FormContainer, RegisterContainer } from './style'
+import Loading from '../../assets/infinity.svg'
 
 export default function Register() {
   const [name, setName] = useState('')
@@ -15,11 +16,14 @@ export default function Register() {
   const [whatsapp, setWhatsapp] = useState('')
   const [city, setCity] = useState('')
   const [uf, setUf] = useState('')
+  const [loading, setLoading] = useState(false)
 
+  const themeContext = useContext(ThemeContext)
   const history = useHistory()
 
   async function handleRegister(e) {
     e.preventDefault()
+    setLoading(true)
 
     const data = {
       email,
@@ -39,13 +43,17 @@ export default function Register() {
         text: `Sua ong foi cadastrada com o Id ${id}`,
         icon: 'success',
         button: 'Copiar',
-      }).then((value) => {
+      }).then(value => {
         if (value) {
-          navigator.clipboard.writeText(id)
+          try {
+            navigator.clipboard.writeText(id)
+          } catch (error) {}
         }
 
         history.push('/')
       })
+
+      setLoading(false)
     } catch (error) {
       swal({
         title: 'Erro!',
@@ -53,14 +61,16 @@ export default function Register() {
         icon: 'error',
         button: 'Ok',
       })
+
+      setLoading(false)
     }
   }
 
   return (
-    <div className="register-container">
-      <div className="content">
+    <RegisterContainer>
+      <FormContainer>
         <section>
-          <img src={LogoImage} alt="Be The Hero" />
+          <img alt="Be The Hero" src={themeContext.images.LogoImage} />
 
           <h1>Cadastro</h1>
           <p>
@@ -68,17 +78,17 @@ export default function Register() {
             casos da sua ONG.
           </p>
 
-          <Link className="back-link" to="/">
+          <BackLink to="/">
             <FiArrowLeft size={16} color="#e02041" />
             Já tenho cadastro
-          </Link>
+          </BackLink>
         </section>
         <form onSubmit={handleRegister}>
           <input
             type="text"
             placeholder="Nome da ONG"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={e => setName(e.target.value)}
           />
           <input
             type="email"
@@ -86,13 +96,13 @@ export default function Register() {
             id=""
             placeholder="E-mail"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
           />
           <input
             type="text"
             placeholder="Whatsapp"
             value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
+            onChange={e => setWhatsapp(e.target.value)}
           />
 
           <div className="input-group">
@@ -100,22 +110,22 @@ export default function Register() {
               type="text"
               placeholder="Cidade"
               value={city}
-              onChange={(e) => setCity(e.target.value)}
+              onChange={e => setCity(e.target.value)}
             />
             <input
               type="text"
               placeholder="UF"
               style={{ width: 80 }}
               value={uf}
-              onChange={(e) => setUf(e.target.value)}
+              onChange={e => setUf(e.target.value)}
             />
           </div>
 
-          <button className="button" type="submit">
-            Cadastrar
-          </button>
+          <MainButton disabled={loading} type="submit">
+            {loading ? <img src={Loading} alt="Loading" /> : 'Cadastrar'}
+          </MainButton>
         </form>
-      </div>
-    </div>
+      </FormContainer>
+    </RegisterContainer>
   )
 }
