@@ -72,7 +72,7 @@ export default function Register() {
         <section>
           <img alt="Be The Hero" src={themeContext.images.LogoImage} />
 
-          <h1>Cadastro</h1>
+          <h1>Cadastre-se</h1>
           <p>
             Faça seu cadastro, entre na plataforma e ajude pessoas a encontrar
             casos da sua ONG.
