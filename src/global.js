@@ -25,7 +25,7 @@ export const GlobalStyles = createGlobalStyle`
       font: 400 14px Roboto, sans-serif;
     }
 
-    button {
+    button:not([disabled]) {
       cursor: pointer;
     }
 

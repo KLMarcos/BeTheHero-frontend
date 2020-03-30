@@ -17,9 +17,12 @@ const MainLink = styled(Link)`
   line-height: 60px;
   transition: filter 0.2s;
 
-  &:hover,
-  &:focus {
+  &:hover:not([disabled]),
+  &:focus:not([disabled]) {
     filter: brightness(90%);
+  }
+  img {
+    height: 100%;
   }
 `
 

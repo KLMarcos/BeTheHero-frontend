@@ -9,15 +9,18 @@ import api from './../../services/api'
 import { BackLink, MainButton } from '../../components/SharedComponents'
 import { LogonContainer } from './style'
 import HeroesImage from '../../assets/heroes.png'
+import Loading from '../../assets/infinity.svg'
 
 export default function Logon() {
   const [id, setId] = useState('')
-  
+  const [loading, setLoading] = useState(false)
+
   const themeContext = useContext(ThemeContext)
   const history = useHistory()
 
   async function handleLogin(e) {
     e.preventDefault()
+    setLoading(true)
 
     try {
       const {
@@ -27,9 +30,11 @@ export default function Logon() {
       localStorage.setItem('ongId', id)
       localStorage.setItem('ongName', ongName)
 
+      setLoading(false)
       history.push('/profile')
     } catch (error) {
       swal('Erro!', 'Falha no login, tente novamente.', 'error')
+      setLoading(false)
     }
   }
 
@@ -44,9 +49,12 @@ export default function Logon() {
             type="text"
             placeholder="Seu ID"
             value={id}
-            onChange={(e) => setId(e.target.value)}
+            disabled={loading}
+            onChange={e => setId(e.target.value)}
           />
-          <MainButton type="submit">Entrar</MainButton>
+          <MainButton disabled={loading} type="submit">
+            {loading ? <img src={Loading} alt="Loading" /> : 'Entrar'}
+          </MainButton>
 
           <BackLink to="/register">
             <FiLogIn size={16} color="#e02041" />

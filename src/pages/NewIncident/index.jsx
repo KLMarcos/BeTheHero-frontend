@@ -8,11 +8,13 @@ import api from './../../services/api'
 
 import { BackLink, MainButton } from '../../components/SharedComponents'
 import { NewIncidentContainer, FormContainer } from './style'
+import Loading from '../../assets/infinity.svg'
 
 export default function NewIncident() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [value, setValue] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const ongId = localStorage.getItem('ongId')
   const themeContext = useContext(ThemeContext)
@@ -20,6 +22,7 @@ export default function NewIncident() {
 
   async function handleNewIncident(e) {
     e.preventDefault()
+    setLoading(true)
 
     const data = {
       title,
@@ -36,9 +39,13 @@ export default function NewIncident() {
         history.push('/profile'),
       )
 
+      setLoading(false)
+
       history.push('/profile')
     } catch (error) {
       swal('Erro!', 'Erro ao cadastrar novo caso, tente novamente.', 'error')
+
+      setLoading(false)
     }
   }
 
@@ -61,24 +68,29 @@ export default function NewIncident() {
         </section>
         <form onSubmit={handleNewIncident}>
           <input
+            disabled={loading}
             type="text"
             placeholder="Título do caso"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={e => setTitle(e.target.value)}
           />
           <textarea
+            disabled={loading}
             placeholder="Descrição"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={e => setDescription(e.target.value)}
           />
           <input
+            disabled={loading}
             type="text"
             placeholder="Valor em reais"
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={e => setValue(e.target.value)}
           />
 
-          <MainButton type="submit">Cadastrar</MainButton>
+          <MainButton disabled={loading} type="submit">
+            {loading ? <img src={Loading} alt="Loading" /> : 'Cadastrar'}
+          </MainButton>
         </form>
       </FormContainer>
     </NewIncidentContainer>
