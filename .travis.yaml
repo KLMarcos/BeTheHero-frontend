@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+    - "12.x"
+script:
+    - npm run build
+before_install:
+    - npm install - g firebase
+install:
+    - nom i
+after_success:
+    - firebase deploy --token $FIREBASE_TOKEN
