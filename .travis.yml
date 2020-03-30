@@ -8,4 +8,4 @@ before_install:
 install:
     - npm i
 after_success:
-    - firebase deploy --token $FIREBASE_TOKEN
+    - firebase deploy --project be-the-hero-8cf76 --token $FIREBASE_TOKEN
